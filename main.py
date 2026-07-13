@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
@@ -82,22 +83,21 @@ def get_result_text(yes):
         return (
             f"🟡 Результат — {yes} из 18 совпадений\n\n"
             "Не спеши выдыхать. Даже небольшое количество совпадений говорит о том, что токсины уже работают против тебя — просто тихо и незаметно.\n\n"
-            "Наш организм накапливает токсины годами — из воздуха, воды, еды, стресса, лекарств. И в какой-то момент печень, кишечник и лимфа перестают справляться. Усталость, тусклая кожа, лишний вес — это первые звоночки которые большинство игнорирует.\n\n"
+            "Наш организм накапливает токсины годами — из воздуха, воды, еды, стресса, лекарств. И в какой-то момент печень, кишечник и лимфа перестают справляться.\n\n"
             "Врачи нашего клуба рекомендуют профилактический курс детоксикации минимум 1 раз в год — даже если чувствуешь себя 'нормально'.\n\n"
             "💊 Почему Coral Detox, а не аптечные сорбенты?\n\n"
-            "Активированный уголь или энтеросгель работают только в кишечнике и только пока ты их пьёшь. Они не очищают печень, кровь и лимфу — главные фильтры организма.\n\n"
-            "Coral Detox — комплексная программа которая работает на всех уровнях: выводит токсины из клеток, восстанавливает печень, очищает кровь и лимфу, запускает естественные механизмы самоочищения.\n\n"
-            "Хочешь более глубокое очищение? Coral Detox Plus — расширенная программа с дополнительной поддержкой лимфы и иммунитета. По стоимости за день приёма выгоднее!"
+            "Активированный уголь работает только в кишечнике. Coral Detox работает на всех уровнях: выводит токсины из клеток, восстанавливает печень, очищает кровь и лимфу.\n\n"
+            "Хочешь более глубокое очищение? Coral Detox Plus — расширенная программа с дополнительной поддержкой лимфы и иммунитета. По стоимости за день выгоднее!"
         )
     elif yes <= 11:
         return (
             f"🟠 Результат — {yes} из 18 совпадений\n\n"
             "Твоё тело уже давно подаёт сигналы. И это важно услышать прямо сейчас — пока токсическая нагрузка не стала хронической.\n\n"
-            "При таком количестве совпадений печень, кишечник и лимфатическая система уже работают в режиме перегрузки. Они справляются — но с огромным трудом. Каждый день без очищения — токсины накапливаются глубже, влияют на гормоны, иммунитет и клеточный обмен.\n\n"
+            "При таком количестве совпадений печень, кишечник и лимфатическая система уже работают в режиме перегрузки. Каждый день без очищения — токсины накапливаются глубже.\n\n"
             "Наши врачи настоятельно рекомендуют курс детоксикации как можно скорее.\n\n"
             "💊 Почему Coral Detox, а не аптечные сорбенты?\n\n"
-            "Аптечные средства — это 'заплатка'. Они убирают симптомы но не причину. Coral Detox работает системно: очищает печень, восстанавливает микрофлору кишечника, выводит тяжёлые металлы и шлаки из тканей, запускает клеточное обновление.\n\n"
-            "Хочешь результат глубже? Coral Detox Plus — расширенная программа с дополнительной поддержкой лимфы и иммунитета. По стоимости за день приёма выгоднее!"
+            "Аптечные средства убирают симптомы но не причину. Coral Detox работает системно: очищает печень, восстанавливает микрофлору кишечника, выводит тяжёлые металлы из тканей.\n\n"
+            "Хочешь результат глубже? Coral Detox Plus — расширенная программа с дополнительной поддержкой лимфы и иммунитета. По стоимости за день выгоднее!"
         )
     else:
         return (
@@ -105,15 +105,14 @@ def get_result_text(yes):
             "Это серьёзно. Такое количество совпадений говорит о высокой токсической нагрузке — твой организм работает на износ и давно просит о помощи.\n\n"
             "Токсины накапливаются в клетках, жировой ткани, лимфе и печени годами. При такой нагрузке обычная диета или сорбенты не помогут — нужна глубокая системная очистка.\n\n"
             "Наши врачи убеждены — каждый день промедления обходится организму слишком дорого.\n\n"
-            "💊 Почему Coral Detox Plus — единственный правильный выбор?\n\n"
-            "При высокой токсической нагрузке обычного Coral Detox может быть недостаточно. Coral Detox Plus — расширенная программа глубокой детоксикации:\n\n"
+            "💊 Coral Detox Plus — расширенная программа глубокой детоксикации:\n\n"
             "✔️ Coral Lecithin — восстанавливает клетки печени и нервную систему\n"
-            "✔️ Coral Alfalfa — мощный природный детоксикант, выводит токсины из тканей\n"
-            "✔️ Coral Detox Plus — комплексное очищение печени, крови и лимфы\n"
-            "✔️ Assimilator — 10 пищеварительных ферментов для восстановления ЖКТ\n"
+            "✔️ Coral Alfalfa — мощный природный детоксикант\n"
+            "✔️ Coral Detox Plus — очищение печени, крови и лимфы\n"
+            "✔️ Assimilator — 10 пищеварительных ферментов\n"
             "✔️ H-500 — антиоксидант, нейтрализует свободные радикалы\n"
-            "✔️ Coral-Mine — минеральная вода для вывода токсинов через почки\n"
-            "✔️ Pentokan K — поддержка сердца и сосудов в период очищения\n\n"
+            "✔️ Coral-Mine — минеральная вода для вывода токсинов\n"
+            "✔️ Pentokan K — поддержка сердца в период очищения\n\n"
             "По стоимости за день Coral Detox Plus значительно выгоднее нескольких отдельных курсов!"
         )
 
@@ -140,22 +139,20 @@ def make_kb(yes, with_restart=False):
         buttons.append([InlineKeyboardButton("🔄 Пройти снова", callback_data="restart")])
     return InlineKeyboardMarkup(buttons)
 
-async def send_msg2(context):
-    d = context.job.data
-    await context.bot.send_photo(
-        chat_id=d["chat_id"],
+async def send_delayed_messages(bot, chat_id, yes):
+    await asyncio.sleep(42)
+    await bot.send_photo(
+        chat_id=chat_id,
         photo=DETOX_PHOTO,
         caption=HOW_TO_BUY,
-        reply_markup=make_kb(d["yes"], with_restart=False)
+        reply_markup=make_kb(yes, with_restart=False)
     )
-
-async def send_msg3(context):
-    d = context.job.data
-    await context.bot.send_photo(
-        chat_id=d["chat_id"],
+    await asyncio.sleep(60)
+    await bot.send_photo(
+        chat_id=chat_id,
         photo=WELCOME_PHOTO,
         caption=CLOSING,
-        reply_markup=make_kb(d["yes"], with_restart=True)
+        reply_markup=make_kb(yes, with_restart=True)
     )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -221,17 +218,18 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         yes = USERS[uid]["yes"]
         USERS[uid] = {"step": 0, "yes": 0}
         chat_id = q.message.chat_id
+        bot = context.bot
 
-        await context.bot.send_photo(
+        await bot.send_photo(
             chat_id=chat_id,
             photo=get_result_photo(yes),
             caption=get_result_text(yes)
         )
 
-        context.job_queue.run_once(send_msg2, when=42, data={"chat_id": chat_id, "yes": yes})
-        context.job_queue.run_once(send_msg3, when=102, data={"chat_id": chat_id, "yes": yes})
+        asyncio.create_task(send_delayed_messages(bot, chat_id, yes))
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button))
 app.run_polling()
+   
