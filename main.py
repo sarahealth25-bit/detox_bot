@@ -140,14 +140,14 @@ def make_kb(yes, with_restart=False):
     return InlineKeyboardMarkup(buttons)
 
 async def send_delayed_messages(bot, chat_id, yes):
-    await asyncio.sleep(42)
+    await asyncio.sleep(37)
     await bot.send_photo(
         chat_id=chat_id,
         photo=DETOX_PHOTO,
         caption=HOW_TO_BUY,
         reply_markup=make_kb(yes, with_restart=False)
     )
-    await asyncio.sleep(60)
+    await asyncio.sleep(55)
     await bot.send_photo(
         chat_id=chat_id,
         photo=WELCOME_PHOTO,
@@ -232,4 +232,3 @@ app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button))
 app.run_polling()
-   
